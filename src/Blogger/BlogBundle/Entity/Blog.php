@@ -3,6 +3,7 @@
 namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
@@ -43,6 +44,9 @@ class Blog
    */
   protected $tags;
 
+  /**
+   * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
+   */
   protected $comments;
 
   /**
@@ -57,6 +61,8 @@ class Blog
 
     public function __construct()
     {
+      $this->comments = new ArrayCollection();
+
       $this->setCreated(new \DateTime());
       $this->setUpdated(new \DateTime());
     }
@@ -249,4 +255,38 @@ class Blog
     {
       $this->setUpdated(new \DateTime());
     }
-  }
+  
+    /**
+     * Add comment
+     *
+     * @param \Blogger\BlogBundle\Entity\Comment $comment
+     *
+     * @return Blog
+     */
+    public function addComment(\Blogger\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Blogger\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Blogger\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+}
