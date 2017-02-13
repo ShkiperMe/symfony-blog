@@ -47,10 +47,11 @@ class CommentController extends Controller
       );
     }
 
-    return $this->render('BloggerBlogBundle:Comment:create.html.twig', array(
-      'comment' => $comment,
-      'form'    => $form->createView()
-    ));
+    return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', array(
+        'id'    => $comment->getBlog()->getId(),
+        'slug'  => $comment->getBlog()->getSlug())) .
+      '#comment-' . $comment->getId()
+    );
   }
 
   protected function getBlog($blog_id)
